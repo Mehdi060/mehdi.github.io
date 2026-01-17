@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhammad Mehdi Ishaq - AI Developer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #020617;
+            color: #F8FAFC;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        #cursorCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .cursor-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+
+        body:hover .cursor-glow {
+            opacity: 1;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 1rem 5%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #94A3B8;
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #38BDF8;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4rem;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            flex: 1;
+            animation: fadeInLeft 1s;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 2rem;
+            color: #94A3B8;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #F8FAFC;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.25);
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(56, 189, 248, 0.35);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #F8FAFC;
+            border: 2px solid rgba(56, 189, 248, 0.45);
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: #38BDF8;
+            transform: translateY(-3px);
+        }
+
+        .hero-visual {
+            flex: 1;
+            position: relative;
+        }
+
+        .floating-card {
+            background: rgba(2, 6, 23, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .floating-card:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .floating-card:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-card {
+            background: rgba(2, 6, 23, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 20px 40px rgba(56, 189, 248, 0.25);
+            background: rgba(2, 6, 23, 0.9);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #38BDF8;
+            font-weight: 600;
+        }
+
+        .experience-timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            background: rgba(2, 6, 23, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(10px);
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 20px 40px rgba(56, 189, 248, 0.25);
+            background: rgba(2, 6, 23, 0.9);
+        }
+
+        .timeline-date {
+            color: #38BDF8;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .timeline-company {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #F8FAFC;
+        }
+
+        .timeline-role {
+            color: #94A3B8;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .timeline-achievement {
+            color: #F8FAFC;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .timeline-achievement::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #38BDF8;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: rgba(2, 6, 23, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, rgba(14, 165, 233, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 20px 40px rgba(56, 189, 248, 0.25);
+            background: rgba(2, 6, 23, 0.9);
+        }
+
+        .project-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #38BDF8;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .project-description {
+            color: #F8FAFC;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            position: relative;
+            font-weight: 300;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .tech-tag {
+            background: rgba(56, 189, 248, 0.15);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: #38BDF8;
+            font-weight: 500;
+        }
+
+        .contact-section {
+            text-align: center;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-card {
+            background: rgba(2, 6, 23, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: #F8FAFC;
+            min-width: 200px;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 20px 40px rgba(56, 189, 248, 0.25);
+            background: rgba(2, 6, 23, 0.9);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(2, 6, 23, 0.9);
+            margin-top: 5rem;
+            border-top: 1px solid rgba(56, 189, 248, 0.2);
+            color: #94A3B8;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <canvas id="cursorCanvas"></canvas>
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <nav>
+        <div class="nav-content">
+            <div class="logo">M. Mehdi Ishaq</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1 class="hero-title">Muhammad Mehdi Ishaq</h1>
+                <h2 class="hero-subtitle">AI Developer & ML Engineer</h2>
+                <p class="hero-description">
+                    Passionate about pushing the boundaries of artificial intelligence. Specialized in Computer Vision, NLP, and Machine Learning with a proven track record of delivering innovative solutions that drive efficiency and impact.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#contact" class="btn btn-primary">Get In Touch</a>
+                    <a href="#projects" class="btn btn-secondary">View Projects</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-card">
+                    <div class="skill-icon">🤖</div>
+                    <div class="skill-title">AI Development</div>
+                    <p>Building intelligent systems with cutting-edge ML algorithms</p>
+                </div>
+                <div class="floating-card">
+                    <div class="skill-icon">👁️</div>
+                    <div class="skill-title">Computer Vision</div>
+                    <p>95%+ accuracy in lane detection systems</p>
+                </div>
+                <div class="floating-card">
+                    <div class="skill-icon">💬</div>
+                    <div class="skill-title">NLP Solutions</div>
+                    <p>Natural language processing for intelligent data queries</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="skills">
+            <h2 class="section-title">Core Competencies</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🧠</div>
+                    <div class="skill-title">LLM Development</div>
+                    <p>Building and fine-tuning large language models for diverse applications</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🖼️</div>
+                    <div class="skill-title">Computer Vision</div>
+                    <p>OpenCV, image processing, video analysis, and real-time object detection</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📊</div>
+                    <div class="skill-title">Machine Learning</div>
+                    <p>Decision Trees, SVM, Neural Networks with hyperparameter optimization</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🐍</div>
+                    <div class="skill-title">Python Programming</div>
+                    <p>Advanced Python, Data Structures, Algorithms, and OOP principles</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🔍</div>
+                    <div class="skill-title">NLP</div>
+                    <p>Natural Language Processing, entity recognition, and text analysis</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🎯</div>
+                    <div class="skill-title">Deep Learning</div>
+                    <p>Neural networks, reinforcement learning, and advanced AI architectures</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="experience">
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="experience-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Nov 2025 - Dec 2025</div>
+                    <div class="timeline-company">MetaXperts</div>
+                    <div class="timeline-role">AI/ML Development Intern</div>
+                    <div class="timeline-achievement">Developed intelligent CSV/Excel analyzer with NLP capabilities enabling non-technical users to query datasets using conversational English</div>
+                    <div class="timeline-achievement">Engineered hybrid AI system combining Google Gemini API with advanced fallback algorithms, achieving 100% query success rate</div>
+                    <div class="timeline-achievement">Implemented dynamic query understanding engine supporting 15+ query types including statistical analysis and trend detection</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Aug 2023</div>
+                    <div class="timeline-company">TechOctanet Services PVT LTD</div>
+                    <div class="timeline-role">Computer Vision Intern</div>
+                    <div class="timeline-achievement">Developed automated lane detection system using OpenCV and Hough Transform, processing 1,108 frames with 95%+ accuracy</div>
+                    <div class="timeline-achievement">Implemented ROI masking technique reducing false positives by 70% in complex road scenarios</div>
+                    <div class="timeline-achievement">Optimized batch processing workflow achieving 50+ frames per second processing speed</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="projects">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-title">AI-Based Timetable Scheduling</div>
+                    <p class="project-description">Final year project addressing on-campus management crisis during semester starts. Developed intelligent scheduling system specifically for UMT.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Machine Learning</span>
+                        <span class="tech-tag">Optimization</span>
+                        <span class="tech-tag">Python</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-title">Quran Search Tool</div>
+                    <p class="project-description">Python application for searching keywords in Quran translations with Named Entity Recognition capabilities for identifying entities in verses.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">NLP</span>
+                        <span class="tech-tag">NER</span>
+                        <span class="tech-tag">Python</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-title">Chatbot with Neo4j</div>
+                    <p class="project-description">Conversational AI with graph database integration for managing contexts and data relationships, featuring dynamic query handling.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">NLP</span>
+                        <span class="tech-tag">Neo4j</span>
+                        <span class="tech-tag">Graph DB</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-title">Reinforcement Learning Maze Solver</div>
+                    <p class="project-description">AI agent using Q-Learning to navigate mazes and find optimal paths through trial and error, with learning visualization.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">RL</span>
+                        <span class="tech-tag">Q-Learning</span>
+                        <span class="tech-tag">AI</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-title">Railway Reservation System</div>
+                    <p class="project-description">Database-driven reservation system with normalization, ER diagrams, and SQL operations for ticket booking and train management.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">SQL</span>
+                        <span class="tech-tag">Database</span>
+                        <span class="tech-tag">Backend</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-title">Cross-Platform Mobile App</div>
+                    <p class="project-description">Flutter-based application with modern UI/UX design, Firebase integration, and support for Android and iOS platforms.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Flutter</span>
+                        <span class="tech-tag">Dart</span>
+                        <span class="tech-tag">Firebase</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section contact-section" id="contact">
+            <h2 class="section-title">Let's Connect</h2>
+            <p style="color: #F8FAFC; margin-bottom: 2rem; font-size: 1.2rem; font-weight: 300;">
+                I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+            </p>
+            <div class="contact-links">
+                <a href="mailto:muhammadmahad673@gmail.com" class="contact-card">
+                    <div class="contact-icon">📧</div>
+                    <div>Email</div>
+                    <div style="font-size: 0.9rem; color: #94A3B8;">muhammadmahad673@gmail.com</div>
+                </a>
+                <a href="https://github.com/Mehdi060" target="_blank" class="contact-card">
+                    <div class="contact-icon">💻</div>
+                    <div>GitHub</div>
+                    <div style="font-size: 0.9rem; color: #94A3B8;">@Mehdi060</div>
+                </a>
+                <a href="https://www.linkedin.com/in/muhammad-mehdi-ishaq-b59973306" target="_blank" class="contact-card">
+                    <div class="contact-icon">💼</div>
+                    <div>LinkedIn</div>
+                    <div style="font-size: 0.9rem; color: #94A3B8;">Muhammad Mehdi Ishaq</div>
+                </a>
+                <a href="tel:+923194252243" class="contact-card">
+                    <div class="contact-icon">📱</div>
+                    <div>Phone</div>
+                    <div style="font-size: 0.9rem; color: #94A3B8;">+92 319 4252243</div>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Muhammad Mehdi Ishaq. All rights reserved.</p>
+        <p style="color: #64748B; margin-top: 0.5rem; font-weight: 300;">Built with passion for AI and innovation</p>
+    </footer>
+
+    <script>
+        // Cursor trail effect with particles
+        const canvas = document.getElementById('cursorCanvas');
+        const ctx = canvas.getContext('2d');
+        const cursorGlow = document.getElementById('cursorGlow');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        const particles = [];
+        const maxParticles = 50;
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 2.5 + 0.8;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                // Cyan to blue gradient: HSL 190-210
+                const hue = Math.random() * 20 + 190;
+                this.color = `hsl(${hue}, 85%, ${Math.random() * 20 + 60}%)`;
+                this.life = 100;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= 2;
+                this.size *= 0.96;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.life / 100;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Update cursor glow position
+            cursorGlow.style.left = mouseX + 'px';
+            cursorGlow.style.top = mouseY + 'px';
+
+            // Create particles
+            if (particles.length < maxParticles) {
+                particles.push(new Particle(mouseX, mouseY));
+            }
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+
+                if (particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Generate stars with variety
+        const starsContainer = document.getElementById('stars');
+        const starTypes = ['small', 'medium', 'large'];
+        const animationTypes = ['', 'fast', 'slow'];
+        
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            
+            // Random size
+            const type = starTypes[Math.floor(Math.random() * starTypes.length)];
+            star.classList.add(type);
+            
+            // Random animation speed (30% chance of different speed)
+            if (Math.random() > 0.7) {
+                const animType = animationTypes[Math.floor(Math.random() * animationTypes.length)];
+                if (animType) star.classList.add(animType);
+            }
+            
+            // Random position
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            
+            // Random animation delay for natural effect
+            star.style.animationDelay = Math.random() * 4 + 's';
+            
+            // Some stars have blue tint
+            if (Math.random() > 0.7) {
+                star.style.background = '#38BDF8';
+            }
+            
+            starsContainer.appendChild(star);
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.skill-card, .project-card, .timeline-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s, transform 0.6s';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
